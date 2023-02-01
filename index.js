@@ -1,10 +1,19 @@
 const express = require('express')
 const dotenv = require('dotenv')
 const axios = require('axios')
+const mongoose = require('mongoose');
+
+const AepsReport = require('./model/aeps')
 
 const app = express()
 
 dotenv.config()
+
+
+mongoose.set("strictQuery", false);
+
+mongoose.connect(process.env.mongourl)
+  .then(() => console.log('Connected!'));
 
 
 app.get('/', (req, res) => {
@@ -51,16 +60,42 @@ app.get('/aepsInitate', (req, res) => {
 })
 
 
-app.get('/aepsfirstcallback', (req, res) => {
+app.get('/aepsfirstcallback',async(req, res) => {
+
+    const { Txntype, Timestamp, BcId, TerminalId, TransactionId, Amount, TxnStatus, BankIIN, TxnMedium,EndCustMobile } = req.query;
+
+    const aepsdata = new AepsReport({
+        Txntype,
+        Timestamp,
+        BcId,
+        TerminalId,
+        TransactionId,
+        Amount,
+        TxnStatus,
+        BankIIN,
+        TxnMedium,
+        EndCustMobile,
+    });
+
+    try {
+
+        await aepsdata.save(aepsdata);
+
+        res.status(200).send({
+            MESSAGE: "Success",
+            STATUS: "SUCCESS",
+            TRANSACTION_ID:TransactionId,
+            VENDOR_ID:TransactionId
+        })
     
-    res.status(200).send({
-        MESSAGE: "Success",
-        STATUS: "SUCCESS",
-        TRANSACTION_ID:req.query.TransactionId,
-        VENDOR_ID:req.query.TransactionId
-    })
+
+    } catch (err) {
+        console.log(err);
+    }
+
+    
 })
 
-app.get('/shiva', (req, res) => res.redirect('http://www.v2.egram.org/'))
+
 
 app.listen(1100)
