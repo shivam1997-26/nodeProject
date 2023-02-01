@@ -7,11 +7,11 @@ const app = express()
 dotenv.config()
 
 
-app.get('/', (req,res) => {
-     res.send('hi shivam')
+app.get('/', (req, res) => {
+    res.send('hi shivam')
 })
 
-app.get('/aepsInitate',(req,res)=>{
+app.get('/aepsInitate', (req, res) => {
     var data = JSON.stringify({
         "bc_id": "BC0929091",
         "phone1": "8169167617",
@@ -34,15 +34,15 @@ app.get('/aepsInitate',(req,res)=>{
         .then(function (response) {
             console.log(JSON.stringify(response.data));
 
-        
 
-            res.redirect('https://icici.bankmitra.org/Location.aspx?text='+response.data[0].Result);
+
+            res.redirect('https://icici.bankmitra.org/Location.aspx?text=' + response.data[0].Result);
 
             // res.writeHead(301, {
             //     Location: `https://icici.bankmitra.org/Location.aspx?text="${response.data[0].Result}"`
             //   }).end();
 
-            
+
 
         })
         .catch(function (error) {
@@ -51,11 +51,16 @@ app.get('/aepsInitate',(req,res)=>{
 })
 
 
-app.get('/aepsfirstcallback',(req,res)=>{
-     console.log(req.query)
-     res.status(200).send('req.query')
+app.get('/aepsfirstcallback', (req, res) => {
+    
+    res.status(200).send({
+        MESSAGE: "Success",
+        STATUS: "SUCCESS",
+        TRANSACTION_ID:req.query.TransactionId,
+        VENDOR_ID:req.query.TransactionId
+    })
 })
 
-app.get('/shiva', (req,res) => res.redirect('http://www.v2.egram.org/'))
+app.get('/shiva', (req, res) => res.redirect('http://www.v2.egram.org/'))
 
 app.listen(1100)
