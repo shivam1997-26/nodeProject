@@ -34,7 +34,9 @@ app.get('/aepsInitate',(req,res)=>{
         .then(function (response) {
             console.log(JSON.stringify(response.data));
 
-            res.redirect('https://icici.bankmitra.org/Location.aspx?text="${response.data[0].Result}"')
+        
+
+            res.redirect('https://icici.bankmitra.org/Location.aspx?text='+response.data[0].Result);
 
             // res.writeHead(301, {
             //     Location: `https://icici.bankmitra.org/Location.aspx?text="${response.data[0].Result}"`
