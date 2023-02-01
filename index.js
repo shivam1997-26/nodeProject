@@ -50,6 +50,12 @@ app.get('/aepsInitate',(req,res)=>{
         });
 })
 
+
+app.get('/aepsfirstcallback',(req,res)=>{
+     console.log(req.query)
+     res.status(200).send('OK')
+})
+
 app.get('/shiva', (req,res) => res.redirect('http://www.v2.egram.org/'))
 
 app.listen(1100)
