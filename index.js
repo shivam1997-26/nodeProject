@@ -99,7 +99,7 @@ app.get('/aepsSecondcallback', async (req, res) => {
     let aepsalldata;
     try {
         aepsalldata = await AepsReport.updateOne({ TransactionId: TransactionId }, { $set: { TxnStatus: Status, rrn: rrn, bankmessage: bankmessage } });
-        if (aepsalldata.acknowledged == true) {
+        if (aepsalldata.acknowledged == true && aepsalldata.matchedCount==1) {
 
 
             res.status(200).send(
