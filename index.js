@@ -62,6 +62,8 @@ app.get('/aepsInitate', (req, res) => {
 
 app.get('/aepsfirstcallback',async(req, res) => {
 
+    console.log(req.query)
+
     const { Txntype, Timestamp, BcId, TerminalId, TransactionId, Amount, TxnStatus, BankIIN, TxnMedium,EndCustMobile } = req.query;
 
     const aepsdata = new AepsReport({
