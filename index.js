@@ -13,7 +13,7 @@ dotenv.config()
 mongoose.set("strictQuery", false);
 
 mongoose.connect(process.env.mongourl)
-  .then(() => console.log('Connected!'));
+    .then(() => console.log('Connected!'));
 
 
 app.get('/', (req, res) => {
@@ -41,30 +41,24 @@ app.get('/aepsInitate', (req, res) => {
 
     axios(config)
         .then(function (response) {
-            console.log(JSON.stringify(response.data));
-
-
 
             res.redirect('https://icici.bankmitra.org/Location.aspx?text=' + response.data[0].Result);
 
-            // res.writeHead(301, {
-            //     Location: `https://icici.bankmitra.org/Location.aspx?text="${response.data[0].Result}"`
-            //   }).end();
-
-
-
         })
+
         .catch(function (error) {
+
             console.log(error);
+
         });
 })
 
 
-app.get('/aepsfirstcallback',async(req, res) => {
+app.get('/aepsfirstcallback', async (req, res) => {
 
     console.log(req.query)
 
-    const { Txntype, Timestamp, BcId, TerminalId, TransactionId, Amount, TxnStatus, BankIIN, TxnMedium,EndCustMobile } = req.query;
+    const { Txntype, Timestamp, BcId, TerminalId, TransactionId, Amount, TxnStatus, BankIIN, TxnMedium, EndCustMobile } = req.query;
 
     const aepsdata = new AepsReport({
         Txntype,
@@ -86,16 +80,44 @@ app.get('/aepsfirstcallback',async(req, res) => {
         res.status(200).send({
             MESSAGE: "Success",
             STATUS: "SUCCESS",
-            TRANSACTION_ID:TransactionId,
-            VENDOR_ID:TransactionId
+            TRANSACTION_ID: TransactionId,
+            VENDOR_ID: TransactionId
         })
-    
+
 
     } catch (err) {
         console.log(err);
     }
 
-    
+
+})
+
+app.get('/aepsSecondcallback', async (req, res) => {
+
+    const { TransactionId, VenderId, Status, BcCode, rrn, bankmessage } = req.query
+
+    let aepsalldata;
+    try {
+        aepsalldata = await AepsReport.updateOne({ TransactionId: TransactionId }, { $set: { TxnStatus: Status, rrn: rrn, bankmessage: bankmessage } });
+        if (aepsalldata.acknowledged == true) {
+
+
+            res.status(200).send(
+                {
+                    "MESSAGE": "update Successfully!!",
+                    "STATUS": "SUCCESS"
+                }
+            )
+        }
+
+    }
+    catch (err) {
+        return new Error(err);
+    }
+
+
+    console.log(aepsalldata)
+
 })
 
 

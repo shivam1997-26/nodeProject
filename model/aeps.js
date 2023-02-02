@@ -36,6 +36,9 @@ const aepsSchema = new Schema({
     },
     rrn:{
         type: String
+    },
+    bankmessage:{
+        type:String
     }
 
 });
