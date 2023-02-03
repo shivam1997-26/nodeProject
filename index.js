@@ -56,10 +56,7 @@ app.get('/aepsInitate', (req, res) => {
 
 app.get('/aepsfirstcallback', async (req, res) => {
 
-    console.log(req.query)
-
     const { Txntype, Timestamp, BcId, TerminalId, TransactionId, Amount, TxnStatus, BankIIN, TxnMedium, EndCustMobile } = req.query;
-
     const aepsdata = new AepsReport({
         Txntype,
         Timestamp,
@@ -99,7 +96,7 @@ app.get('/aepsSecondcallback', async (req, res) => {
     let aepsalldata;
     try {
         aepsalldata = await AepsReport.updateOne({ TransactionId: TransactionId }, { $set: { TxnStatus: Status, rrn: rrn, bankmessage: bankmessage } });
-        if (aepsalldata.acknowledged == true && aepsalldata.matchedCount==1) {
+        if (aepsalldata.acknowledged === true && aepsalldata.matchedCount===1 && aepsalldata.modifiedCount===1 ) {
 
 
             res.status(200).send(
@@ -109,10 +106,18 @@ app.get('/aepsSecondcallback', async (req, res) => {
                 }
             )
         }
+        else{
+            res.status(202).send(
+                {
+                    "MESSAGE": "there is some issue!!",
+                    "STATUS": "FAILED"
+                }
+            )
+        }
 
     }
     catch (err) {
-        return new Error(err);
+        res.status(500).send(err);
     }
 
 
