@@ -26,6 +26,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/aepsInitate', (req, res) => {
+    
     var data = JSON.stringify({
         "bc_id": "BC0929091",
         "phone1": "8169167617",
@@ -221,40 +222,17 @@ app.get('/aepsSecondcallback', async (req, res) => {
 })
 
 app.get('/db', (req, res) => {
-    // dbconn().then((data) => {
-    //     data.collection("aepsreports").find({}).toArray((err, result) => {
-    //         if (err) throw err;
-    //         console.log(result);
-    //         res.send(result)
-    //     });
-
-    // }).catch(err => {
-    //     console.log(err)
-    // })
-        var data = '';
-
-    var config = {
-        method: 'get',
-        url: 'http://uat.dhansewa.com/Common/Aepsbanklist',
-        headers: {},
-        data: data
-    };
-
-    axios(config)
-        .then(function (response) {
-            console.log(JSON.stringify(response.data));
-            dbconn().then((data)=>{
-                data.collection('AepsbankList').insert(response.data,(err,resp)=>{
-                    if (err) throw err;
-                    console.log(resp);
-                })
-            }).catch((error)=>{
-                console.log(error)
-            })
-        })
-        .catch(function (error) {
-            console.log(error);
+    dbconn().then((data) => {
+        data.collection("aepsreports").find({}).toArray((err, result) => {
+            if (err) throw err;
+            console.log(result);
+            res.send(result)
         });
+
+    }).catch(err => {
+        console.log(err)
+    })
+
 });
 
 app.listen(1200)
