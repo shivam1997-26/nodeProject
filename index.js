@@ -123,6 +123,7 @@ app.get('/aepsfirstcallback', async (req, res) => {
 
         dbconn().then((data) => {
             data.collection("aepsreports").insertOne(aepsdata, function (err, resp) {
+                console.log(resp)
                 if (err) throw err;
                 res.status(200).send({
                     MESSAGE: "Success",
@@ -220,16 +221,40 @@ app.get('/aepsSecondcallback', async (req, res) => {
 })
 
 app.get('/db', (req, res) => {
-    dbconn().then((data) => {
-        data.collection("aepsreports").find({}).toArray((err, result) => {
-            if (err) throw err;
-            console.log(result);
-            res.send(result)
-        });
+    // dbconn().then((data) => {
+    //     data.collection("aepsreports").find({}).toArray((err, result) => {
+    //         if (err) throw err;
+    //         console.log(result);
+    //         res.send(result)
+    //     });
 
-    }).catch(err => {
-        console.log(err)
-    })
+    // }).catch(err => {
+    //     console.log(err)
+    // })
+        var data = '';
+
+    var config = {
+        method: 'get',
+        url: 'http://uat.dhansewa.com/Common/Aepsbanklist',
+        headers: {},
+        data: data
+    };
+
+    axios(config)
+        .then(function (response) {
+            console.log(JSON.stringify(response.data));
+            dbconn().then((data)=>{
+                data.collection('AepsbankList').insert(response.data,(err,resp)=>{
+                    if (err) throw err;
+                    console.log(resp);
+                })
+            }).catch((error)=>{
+                console.log(error)
+            })
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 });
 
 app.listen(1200)
