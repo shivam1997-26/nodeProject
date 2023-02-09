@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/aepsInitate', (req, res) => {
-    
+
     var data = JSON.stringify({
         "bc_id": "BC0929091",
         "phone1": "8169167617",
@@ -107,12 +107,12 @@ app.get('/aepsfirstcallback', async (req, res) => {
     const bankdata1 = await bankdata.toArray()
 
     const Medium = (data) => {
-  switch(data) {
-    case '1':
-        return 'Web'
-    case '':
-        return 'App'
-  }
+        switch (data) {
+            case '1':
+                return 'Web'
+            case '2':
+                return 'App'
+        }
     }
 
     const aepsdata = {
@@ -230,11 +230,10 @@ app.get('/aepsSecondcallback', async (req, res) => {
 
 })
 
-app.get('/db', (req, res) => {
+app.get('/aepsReport', (req, res) => {
     dbconn().then((data) => {
         data.collection("aepsreports").find({}).toArray((err, result) => {
             if (err) throw err;
-            console.log(result);
             res.send(result)
         });
 
