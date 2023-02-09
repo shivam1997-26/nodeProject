@@ -130,9 +130,9 @@ app.get('/aepsfirstcallback', async (req, res) => {
         TxnStatus,
         BankIIN,
         TxnMedium: mediumData[TxnMedium],//Medium(TxnMedium),
-        EndCustMobile,
+        EndCustMobile
         // bankname: bankdata1[0].NAME
-        bankname
+      
     };
 
     try {
