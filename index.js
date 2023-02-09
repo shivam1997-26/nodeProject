@@ -100,19 +100,24 @@ app.get('/aepsfirstcallback', async (req, res) => {
 
     const { Txntype, Timestamp, BcId, TerminalId, TransactionId, Amount, TxnStatus, BankIIN, TxnMedium, EndCustMobile } = req.query;
 
-    const data = await dbconn()
+    // const data = await dbconn()
 
-    const bankdata = data.collection('AepsbankList').find({ IIN: BankIIN })
+    // const bankdata = data.collection('AepsbankList').find({ IIN: BankIIN })
 
-    const bankdata1 = await bankdata.toArray()
+    // const bankdata1 = await bankdata.toArray()
 
-    const Medium = (data) => {
-        switch (data) {
-            case '1':
-                return 'Web'
-            case '2':
-                return 'App'
-        }
+    // const Medium = (data) => {
+    //     switch (data) {
+    //         case '1':
+    //             return 'Web'
+    //         case '2':
+    //             return 'App'
+    //     }
+    // }
+
+    const mediumData = {
+        '1': 'Web',
+        '2': 'App'
     }
 
     const aepsdata = {
@@ -124,9 +129,10 @@ app.get('/aepsfirstcallback', async (req, res) => {
         Amount,
         TxnStatus,
         BankIIN,
-        TxnMedium: Medium(TxnMedium),
+        TxnMedium: mediumData[TxnMedium],//Medium(TxnMedium),
         EndCustMobile,
-        bankname: bankdata1[0].NAME
+        // bankname: bankdata1[0].NAME
+        bankname
     };
 
     try {
