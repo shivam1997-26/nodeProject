@@ -106,6 +106,15 @@ app.get('/aepsfirstcallback', async (req, res) => {
 
     const bankdata1 = await bankdata.toArray()
 
+    const Medium = (data) => {
+  switch(data) {
+    case '1':
+        return 'Web'
+    case '':
+        return 'App'
+  }
+    }
+
     const aepsdata = {
         Txntype,
         Timestamp,
@@ -115,7 +124,7 @@ app.get('/aepsfirstcallback', async (req, res) => {
         Amount,
         TxnStatus,
         BankIIN,
-        TxnMedium,
+        TxnMedium: Medium(TxnMedium),
         EndCustMobile,
         bankname: bankdata1[0].NAME
     };
